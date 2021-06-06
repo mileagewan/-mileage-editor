@@ -1,5 +1,5 @@
 <template>
-    <div id="ace-editor" style="width: 500px;height: 500px"></div>
+    <div id="ace-editor" :class="`ace-editor-${type}`" style="width: 500px;height: 500px"></div>
 </template>
 
 <script>
@@ -42,7 +42,7 @@
               enableSnippets: !0,
               enableLiveAutocompletion: !0
             });
-            this.edit.setValue(this.props)
+            this.edit.setValue(this.value)
           });
       }
     }
@@ -51,5 +51,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+    #ace-editor {
+        border: 1px solid #d8d8d8;
+        box-sizing: border-box;
+        display: inline-block;
+    }
+    #ace-editor.ace-editor-html {
+        border: 1px solid #c94922;
+    }
+    #ace-editor.ace-editor-javascript {
+        border: 1px solid #c08b30;
+    }
 </style>
