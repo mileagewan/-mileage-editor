@@ -36,6 +36,10 @@
             window.ace.require('ace/ext/language_tools');
             this.edit = window.ace.edit(this.$el);
             this.edit.getSession().setMode(`ace/mode/${this.type}`);
+            this.edit.getSession().setTabSize(2);
+            this.edit.setHighlightActiveLine(false);
+            this.edit.getSession().setUseWrapMode(true);
+            this.edit.resize()
             this.edit.setOptions({
               enableBasicAutocompletion: !0,
               enableSnippets: !0,
