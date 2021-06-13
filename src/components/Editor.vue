@@ -1,10 +1,9 @@
 <template>
-    <div id="ace-editor" :class="`ace-editor-${type}`" style="width: 500px;height: 500px"></div>
+    <div id="ace-editor" :class="`ace-editor-${type}`"></div>
 </template>
 
 <script>
  import {getSources} from "../Utils/Utils";
-
  export default {
     components: {},
     data() {
@@ -44,6 +43,9 @@
             });
             this.edit.setValue(this.value)
           });
+      },
+      getValue() {
+        return this.edit.getValue()
       }
     }
   };
@@ -55,6 +57,8 @@
         border: 1px solid #d8d8d8;
         box-sizing: border-box;
         display: inline-block;
+        width: 100%;
+        height: 100%;
     }
     #ace-editor.ace-editor-html {
         border: 1px solid #c94922;

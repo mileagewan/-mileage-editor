@@ -3,8 +3,13 @@ import App from './App.vue'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.config.productionTip = false
-
+HTMLElement.prototype.$empty = function () {
+  this.innerHTML = ''
+  return this
+}
 Vue.use(Element)
+window.ELEMENT = Element
+window.Vue = Vue
 new Vue({
   render: h => h(App),
 }).$mount('#app')
