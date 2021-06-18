@@ -1,4 +1,3 @@
-import fa from "../../../../test/element-react/src/locale/lang/fa";
 
 const setAttributes = (element, p = {}) => {
   for (let k in p) {
@@ -7,7 +6,7 @@ const setAttributes = (element, p = {}) => {
 };
 export const getSources = () => {
   let nt = {};
-  return function getSource(t) {
+  return function getSource (t) {
     return Promise.all(t.map(t => {
       if ('string' === typeof t) {
         t = {

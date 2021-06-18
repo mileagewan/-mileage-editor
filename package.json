@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "ace-builds": "^1.4.12",
+    "ant-design-vue": "^1.7.5",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.2",
     "monaco-editor": "^0.24.0",

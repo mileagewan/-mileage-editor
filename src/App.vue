@@ -6,9 +6,14 @@
         <button @click="handleClick(2)">javaScript</button>
         <button class="toRun" @click="handleClick(3)">运行</button>
       </div>
-      <div style="width: 100%;height: calc(100% - 42px)">
+      <div style="width: 100%; height: calc(100% - 42px)">
         <Editor ref="html" v-show="p === 1" type="html" :value="defaultHtml" />
-        <Editor ref="js" v-show="p === 2" type="javascript" :value="defaultJs" />
+        <Editor
+          ref="js"
+          v-show="p === 2"
+          type="javascript"
+          :value="defaultJs"
+        />
       </div>
     </div>
     <div class="editor-right">
@@ -17,22 +22,101 @@
   </div>
 </template>
 <script>
-import Editor from './components/Editor';
-import Vue from 'vue';
-import Element from 'element-ui'
+import Editor from "./components/Editor";
+import Vue from "vue";
+
 export default {
-  name: 'EditorRun',
+  name: "EditorRun",
   components: {
-    Editor,
+    Editor
   },
   data() {
     return {
       p: 1,
-      defaultJs: `export default {
-}`,
-      defaultHtml: `<el-button>
+      defaultJs: `
+  export default {
+    data() {
+      return {
+        pickerOptions: {
+         onPick() {
+              // 这里可以写执行之后的逻辑
+              debugger
+              //用户选择一次时间范围会触发两次
+         },
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+            debugger
+              picker.$emit('pick', new Date());
+            }
+          }, {
+            text: '昨天',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', date);
+            }
+          }, {
+            text: '一周前',
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', date);
+            }
+          }],
+          disabledDate(timer) {
+            return timer.getTime() < (Date.now() - 360 * 1000 * 23)
+          },
+          selectableRange: '10:00:00 - 23:59:59'
+        },
+        value1: '',
+        value2: '',
+        value3: ''
+      };
+    },
+    mounted() {
     
-</el-button>`
+     
+    },
+    methods: {
+      change(...p) {
+        console.log(p)
+      },
+      pick() {
+        debugger
+      },
+      focus() {
+        this.$nextTick(() => {
+           this.$refs['data-pick'].picker.$on('pick', (...p) => {
+              let now = new Date(p[0]).toJSON().substr(0, 10)
+              let today = new Date().toJSON().substr(0, 10)
+              if(now >today) {
+                this.pickerOptions.selectableRange = '00:00:00 - 23:59:59'
+              }
+              
+            })
+        })
+      }
+    }
+  };
+`,
+      defaultHtml: `
+  <div class="block">
+    <span class="demonstration">带快捷选项</span>
+    <el-date-picker
+      @focus="focus"
+      @change="change"
+      v-model="value2"
+      type="datetime"
+      ref="data-pick"
+      placeholder="选择日期时间"
+      @pick="pick"
+      align="right"
+      :picker-options="pickerOptions"
+    >
+    </el-date-picker>
+  </div>
+`
     };
   },
   methods: {
@@ -41,33 +125,38 @@ export default {
         this.p = p;
       } else {
         const template = this.$refs.html.getValue();
-        const el = document.createElement('div');
+        const el = document.createElement("div");
         this.$el
-          .querySelector('#running-views')
+          .querySelector("#running-views")
           .$empty()
           .appendChild(el);
         const str = this.$refs.js.getValue();
-        const code = str.replace(/export default\s+/, 'return ').replace(';', '');
+        const code = str
+          .replace(/export default\s+/, "return")
+          .replace(/^<script>\s+/, "")
+          .replace(/\s+<\/script>$/, "")
+          .replace(";", "");
         var data = new Function(code)();
-        const components = {}
-        for(const k in Element) {
-          if (Object.prototype.toString.call(Element[k]) === 'Object object') {
-            components[Element[k].name] = Element[k]
-          }
-        }
+        const components = {};
+        // for (const k in Element) {
+        //   if (Object.prototype.toString.call(Element[k]) === "Object object") {
+        //     components[Element[k].name] = Element[k];
+        //   }
+        // }
         const options = Object.assign(
           {},
           {
-            template:  `<div>${template}</div>`,
+            template: `<div>${template}</div>`,
             el: el,
-            components,
+            components
           },
           data
         );
+
         new Vue(options);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style>
